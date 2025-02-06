@@ -1,6 +1,6 @@
 # CSE-360 Group Project
 
-Welcome to the **CSE-360 Group Project** repository. This project is a [brief description of what your project does]. It uses Java, JavaFX for the user interface, and H2 as the embedded database.
+Welcome to the **CSE-360 Group Project** repository. This project is an application that store users information and check different question answers. It uses Java, JavaFX for the user interface, and H2 as the embedded database.
 
 ## Table of Contents
 
@@ -22,6 +22,7 @@ Welcome to the **CSE-360 Group Project** repository. This project is a [brief de
 The repository is organized as follows:
 
 ## Installation
+None.
 
 ### Prerequisites
 
