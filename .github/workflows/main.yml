@@ -1,42 +1,29 @@
-            - name: Setup Java
-  # You may pin to the exact commit or the version.
-  # uses: Fleshgrinder/setup-java@da5229ba146b252e0b14db4f3724f7f1f846bf66
-  uses: Fleshgrinder/setup-java@1.0.0
-  with:
-    # Specifies a version to use instead of reading it from a file, useful in matrix builds.
-    version: # optional
-    # Specifies the name to the file where the version should be read from.
-    version-filename: # optional
-    # Specifies the Java distribution (temurin, zulu, adopt, adopt-hotspot, adopt-openj9, liberica, microsoft, or corretto).
-    distribution: # optional
-    # Specifies the Java architecture (x86, x64, armv7, aarch64, or ppc64le).
-    architecture: # optional
-    # Specifies the Java package type (jdk, jre, jdk+fx, or jre+fx).
-    package-type: # optional
-    # Specifies if the latest available version should be resolved on each run, or not.
-    check-latest: # optional
+name: Build and Test
 
-    - name: Set up JDK 23
-  uses: actions/setup-java@v3
-  with:
-    distribution: 'temurin'
-    java-version: '23'
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-- name: Build with Maven
-  run: mvn clean install
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-- name: Run Application
-  run: |
-    java --module-path ${{ github.workspace }}/javafx-sdk-23.0.2/lib \
-         --add-modules javafx.controls,javafx.fxml \
-         -jar target/your-application.jar
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-         env:
-  CUSTOM_VAR: "myValue"
+      - name: Set up JDK 23
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '23'
 
-  - name: Run Application
-  env:
-    API_KEY: ${{ secrets.API_KEY }}
-  run: java -jar target/your-application.jar
+      - name: Build with Maven
+        run: mvn clean install
 
+      - name: Run tests
+        run: mvn test
 
+      # Optionally, add steps to deploy your application
