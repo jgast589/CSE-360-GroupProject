@@ -27,7 +27,7 @@ The repository is organized as follows:
 
 - **Eclipse IDE:** This project was built with Eclipse.
 - **Java JDK 23:** Make sure you have JDK 23 installed.
-- **JavaFX SDK:** javafx-sdk-23.0.2
+- **JavaFX SDK:** Make sure you have javafx-sdk-23.0.2 installed.
 - **H2 Database Driver:** The H2 driver is available in the `h2/bin` folder.
 
 ### Setting Up the Project in Eclipse
