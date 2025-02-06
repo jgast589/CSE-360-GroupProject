@@ -35,5 +35,5 @@ The repository is organized as follows:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/yourusername/CSE-360-GroupProject.git
+   git clone https://github.com/Rui-Rui-F/CSE-360-GroupProject.git
 
