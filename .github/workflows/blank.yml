@@ -1,0 +1,42 @@
+name: Build and Test with Custom JDK and JavaFX SDK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up the custom JDK from the repository
+      - name: Set up Custom JDK 23
+        run: |
+          # Assume the JDK is located in the jdk-23 folder in your repository.
+          export JAVA_HOME="${{ github.workspace }}/jdk-23"
+          echo "JAVA_HOME=${JAVA_HOME}" >> $GITHUB_ENV
+          # Prepend the custom JDK's bin directory to PATH.
+          echo "${JAVA_HOME}/bin" >> $GITHUB_PATH
+          java -version  # Check that the correct version is used.
+
+      # Step 3: Build with Maven (adjust if you're using Gradle or another build tool)
+      - name: Build with Maven
+        run: mvn clean install
+
+      # Step 4: (Optional) Run tests
+      - name: Run Tests
+        run: mvn test
+
+      # Step 5: (Optional) Run the application with JavaFX modules
+      - name: Run Application
+        run: |
+          # Adjust the following command if needed
+          java --module-path "${{ github.workspace }}/javafx-sdk-23.0.2/lib" \
+               --add-modules javafx.controls,javafx.fxml \
+               -jar target/your-application.jar
