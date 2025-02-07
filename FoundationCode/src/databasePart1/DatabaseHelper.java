@@ -57,6 +57,16 @@ public class DatabaseHelper {
 	            + "code VARCHAR(10) PRIMARY KEY, "
 	            + "isUsed BOOLEAN DEFAULT FALSE)";
 	    statement.execute(invitationCodesTable);
+
+
+	    //Create the one-time password invitation table
+	    //sets unique key, # of characters, BOOLEAN to false.
+	    //@JeremyGastelo
+	    String passwordTable = "CREATE TABLE IF NOT EXISTS oneTimePasswords ("
+	    		+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+	    		+ "pass VARCHAR(8),"
+	    		+ "isUsed BOOLEAN DEFAULT FALSE)";
+	    statement.execute(passwordTable);
 	}
 
 
@@ -80,6 +90,58 @@ public class DatabaseHelper {
 			pstmt.executeUpdate();
 		}
 	}
+
+
+
+	//Generates a one-time password for password reset
+	//using a UUID, removing the hyphens and spaces and getting a length up to 8 characters
+	//@JeremyGastelo
+	public String generatePassword() {
+		String pass = UUID.randomUUID().toString().replace("-","").substring(0, 8); // Generate a random 8-character code
+	    String query = "INSERT INTO oneTimePasswords (pass) VALUES (?)";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, pass);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return pass;	
+	}
+
+
+	//Validates the password
+	//@JeremyGastelo
+	public boolean validatePassword(String pass) {
+   	 String query = "SELECT * FROM oneTimePasswords WHERE pass = ? AND isUsed = FALSE";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	       pstmt.setString(1, pass);
+	        ResultSet rs = pstmt.executeQuery();
+	       if (rs.next()) {
+	            // Mark the code as used
+	            markPasswordAsUsed(pass);
+	            return true;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+
+
+	//Marks the given one-time password as used.
+	//@JeremyGastelo
+		private void markPasswordAsUsed(String pass) {
+		    String query = "UPDATE oneTimePasswords SET isUsed = TRUE WHERE pass = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+		        pstmt.setString(1, pass);
+		        pstmt.executeUpdate();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+
 
 	// Validates a user's login credentials.
 	public boolean login(User user) throws SQLException {
