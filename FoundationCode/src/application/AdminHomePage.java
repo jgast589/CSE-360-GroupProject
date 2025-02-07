@@ -78,10 +78,25 @@ private final DatabaseHelper databaseHelper;
     	    }
     	    
     	    });
+
+	    //new button that will act as the generation of the one-time password for password resets.
+	    //@JeremyGastelo
+	    //TODO:
+	    Label newPassLabel = new Label(""); 
+        newPassLabel.setStyle("-fx-font-size: 14px; -fx-font-style: italic;");
+	    Button newPassButton = new Button();
+	    newPassButton.setText("Generate One Time Password");
+	    newPassButton.setStyle("-fx-font-size: 16px; -fx-font-family: Arial;");
+	    newPassButton.setOnAction(a -> {
+        	// Generate the oneTimePassword using the databaseHelper and set it to the label
+            String oneTimePassword = databaseHelper.generatePassword();
+            newPassLabel.setText(oneTimePassword);
+        });
+        
     	  
             
             layout.getChildren().addAll(adminLabel,inviteButton,logoutButton,changeRoleButton
-            		,getAll);
+            		,getAll, newPassLabel, newPassButton);
 	    
 	    // Set the scene to primary stage
 	    primaryStage.setScene(adminScene);
